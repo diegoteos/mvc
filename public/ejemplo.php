@@ -1,1 +1,2 @@
-este es el ejemplo
+<?php
+echo 'este es el ejemplo';
