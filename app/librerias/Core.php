@@ -25,7 +25,7 @@ class Core
         if (file_exists('../app/controladores/' . ucwords($url[0]) . '.php')) {
             // si existe se setea o configura como controlador por defecto
             $this->controladorActual = ucwords($url[0]);
-            
+
             //unset indice 0
             unset($url[0]);
         }
@@ -33,6 +33,27 @@ class Core
         // requerimos el controlador
         require_once '../app/controladores/' . $this->controladorActual . '.php';
         $this->controladorActual = new $this->controladorActual;
+
+
+
+        // chequear la segunda parte de la url que seria el metodo
+
+        if (isset($url[1])) {
+            if (method_exists($this->controladorActual, $url[1])) {
+                // cheaquemos el metodo
+                $this->metodoActual = $url[1];
+                //unset indice 1
+                unset($url[1]);
+            }
+        }
+        //para probar traer metodo
+        //echo $this->metodoActual;
+
+        //obtener los parametros
+        $this->parametros = $url ? array_values($url) : [];
+        
+        // llamar callback con parametros array
+        call_user_func_array([$this->controladorActual, $this->metodoActual], $this->parametros);
     }
 
     public function getUrl()
